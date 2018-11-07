@@ -1,0 +1,19 @@
+body {
+    font: 10px sans-serif;
+    background-color: #f1f1f1;
+  }
+  
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #a3a3a3;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    fill: #a3a3a3;
+  }
+  
+  .x.axis path {
+    display: none;
+  }
