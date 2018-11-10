@@ -5,11 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Radial Spans</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="d3.min.js"></script>
 </head>
 <body>
-    <main id="viz"></main>
+    <main>
+        <section class="g-controls">
+            <section class="g-controls__wrapper">
+                <h1 id="control__variable">Variable</h1>
+                <dl>
+                    <section><dt>Route: </dt><dd id="control__route">Route</dd></section>
+                    <section><dt>Unit: </dt><dd id="control__unit">Unit</dd></section>
+                    <section><dt>Respondants: </dt><dd id="control__respondants">Respondants</dd></section>
+                </dl>
+                <label for="selector__variable">Variable:</label>
+                    <select id="selector__variable"></select>
+            </section>
+        </section>
+        <section id="viz"></section>
+    </main>
     <script src="graph.js"></script>
     <script src="config.js"></script>
 </body>
