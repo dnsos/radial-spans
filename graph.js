@@ -1,42 +1,19 @@
-function createGraph(data) {
-
-    d3.select("#control__variable").text(data.variable);
-    d3.select("#control__route").text(data.route);
-    d3.select("#control__unit").text(data.unit);
-    d3.select("#control__respondants").text(data.values.length);
+function initGraph(data) {
 
     const values = data.values;
 
-    let extent = d3.extent(values.flat());
-    
-    let barScale = d3.scaleLinear()
-        .domain(extent)
-        .range([innerCircleRadius, barHeight]);
-
     let numBars = values.length;
-
-    let x = d3.scaleLinear()
-        .domain(extent)
-        .range([-innerCircleRadius, -barHeight]);
-
-    let xAxis = d3.axisLeft(x)
-        .ticks(5);
 
     // BACKGROUND CIRCLES
     let circles = svg.append("g")
         .classed("circles__wrapper", true);
 
     svg.select(".circles__wrapper")
-        .append("circle")
-        .attr("r", barHeight)
-        .style("fill", "white");
-
-    svg.select(".circles__wrapper")
         .selectAll("circle")
-        .data(x.ticks(5))
+        .data([1,2,3,4,5,6])
         .enter().append("circle")
         .classed("circle__axis", true)
-        .attr("r", function (d) { return barScale(d); })
+        .attr("r", innerCircleRadius)
         .style("fill", "none")
         .style("stroke", "#dddddd")
         .style("stroke-dasharray", "5,5")
@@ -53,10 +30,6 @@ function createGraph(data) {
         .datum((d) => { return d })
         .append("line")
         .classed("line__distance", true)
-        .attr("y1", -innerCircleRadius)
-        .attr("y2", function (d, i) { 
-            return barScale(-d[1]) - innerCircleRadius * 2; 
-        })
         .style("stroke", "#a3a3a3")
         .style("stroke-width", "1px");
 
@@ -64,12 +37,6 @@ function createGraph(data) {
         .datum((d) => { return d })
         .append("line")
         .classed("line__span", true)
-        .attr("y1", function (d, i) { 
-            return barScale(-d[0]) - innerCircleRadius * 2; 
-        } )
-        .attr("y2", function (d, i) { 
-            return barScale(-d[1]) - innerCircleRadius * 2; 
-        })
         .style("stroke", "#dddddd")
         .style("stroke-width", "10px")
         .on("mouseover", function (d) { 
@@ -87,12 +54,8 @@ function createGraph(data) {
                 .style("stroke", "#dddddd"); 
         });
 
-    svg.append("g")
-        .attr("class", "x axis")
-        .call(xAxis);
-
     // DESTINATION
-    let circleDestination = svg.append("circle")
+    svg.append("circle")
         .classed("circle__destination", true)
         .attr("r", innerCircleRadius)
         .style("fill", "white")
@@ -105,7 +68,13 @@ function createGraph(data) {
         .attr("transform", "translate(" + (-innerCircleRadius / 2) + "," + (-innerCircleRadius / 2) + ")");
 
     // LABELS
-    let labelRadius = barHeight * 1.025;
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0,-7)")
+        .call(xAxis);
+
+    // LABELS
+    /*let labelRadius = barHeight * 1.025;
 
     let labels = svg.append("g")
         .classed("labels", true);
@@ -115,8 +84,8 @@ function createGraph(data) {
         .attr("id", "label-path")
         .attr("d", "m0 " + -labelRadius + " a" + labelRadius + " " + labelRadius + " 0 1,1 -0.01 0");
 
-    /*labels.selectAll("text")
-        .data(data)
+    labels.selectAll("text")
+        .data(values)
         .enter().append("text")
         .style("text-anchor", "middle")
         .style("font-weight", "bold")
@@ -125,4 +94,56 @@ function createGraph(data) {
         .attr("xlink:href", "#label-path")
         .attr("startOffset", function (d, i) { return i * 100 / numBars + 50 / numBars + '%'; })
         .text(function (d) { return d.toUpperCase(); });*/
+}
+
+function updateData(data) {
+
+    d3.select("#control__variable").text(data.variable);
+
+    const values = data.values;
+
+    let extent = d3.extent(values.flat());
+
+    let barScale = d3.scaleLinear()
+        .domain(extent)
+        .range([innerCircleRadius, barHeight]);
+
+    let x = d3.scaleLinear()
+        .domain(extent)
+        .range([-innerCircleRadius, -barHeight]);
+
+    let xAxis = d3.axisLeft(x)
+        .ticks(5)
+        .tickFormat((d) => { return d + " " + data.unit});
+
+    svg.selectAll(".circle__axis")
+        .data(x.ticks(5))
+        .transition()
+        .duration(700)
+        .attr("r", function (d) { return barScale(d); })
+
+    d3.selectAll(".line__distance")
+        .data(data.values)
+        .transition()
+        .duration(700)
+        .attr("y1", -innerCircleRadius)
+        .attr("y2", function (d, i) {
+            return barScale(-d[1]) - innerCircleRadius * 2;
+        });
+
+    d3.selectAll(".line__span")
+        .data(data.values)
+        .transition()
+        .duration(700)
+        .attr("y1", function (d, i) {
+            return barScale(-d[0]) - innerCircleRadius * 2;
+        })
+        .attr("y2", function (d, i) {
+            return barScale(-d[1]) - innerCircleRadius * 2;
+        });
+    
+    svg.select(".x")
+        .transition()
+        .duration(700)
+        .call(xAxis);
 }

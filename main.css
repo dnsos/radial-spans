@@ -1,8 +1,16 @@
+:root {
+  --color-primary: rgb(184, 18, 20);
+  --color-grey-60: rgb(101, 101, 101);
+  --color-grey-36: rgb(163, 163, 163);
+  --color-grey-13: rgb(221, 221, 221);
+}
+
 body {
   padding: 0;
   margin: 0;
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 15px;
+  color: var(--color-grey-60);
   background-color: white;
   }
 
@@ -14,13 +22,21 @@ main {
   padding: 50px;
 }
 
-.g-controls__wrapper {
-  padding: 20px;
-  background-color: #f9f9f9;
+.g-controls, .g-viz {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.g-controls, .g-viz {
+  grid-column: 1 / 2;
 }
 
 h1 {
   margin-top: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-primary);
 }
 
 dl section {
@@ -33,14 +49,53 @@ dt, dd {
 }
 
 dd {
-  font-weight: 700;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--color-primary);
 }
 
-#viz {
+.selector__styling {
+  border: none;
+  overflow: hidden;
+  background: white url("assets/arrow.svg") no-repeat 0% 50%;
+}
+
+.selector__styling select {
+  width: 100%;
+  padding: 5px 5px 5px 25px;
+  border: none;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-primary);
+  box-shadow: none;
+  background: transparent;
+  background-image: none;
+  -webkit-appearance: none;
+}
+
+.selector__styling select:focus {
+  outline: none;
+}
+
+select option {
+  padding: 0;
+}
+
+/* CAUTION: IE hackery ahead */
+select::-ms-expand { 
+    display: none; /* remove default arrow on ie10 and ie11 */
+}
+
+/* target Internet Explorer 9 to undo the custom arrow */
+@media screen and (min-width:0\0) {
+    select {
+        background:none\9;
+        padding: 5px\9;
+    } 
+}
+
+.g-viz {
   grid-column: 2 / 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .axis path,
