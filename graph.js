@@ -4,6 +4,32 @@ function initGraph(data) {
 
     let numBars = values.length;
 
+    // LABELS
+    let labelRadius = barHeight * 1.025;
+
+    let labels = svg.append("g")
+        .classed("labels", true);
+
+    labels.append("def")
+        .append("path")
+        .attr("id", "label-path")
+        .attr("d", "m0 " + -labelRadius + " a" + labelRadius + " " + labelRadius + " 0 1,1 -0.01 0");
+
+    labels.selectAll("text")
+        .data(values)
+        .enter().append("text")
+        .attr("class", (d, i) => {
+            return "label__" + i;
+        })
+        .style("text-anchor", "middle")
+        .style("font-size", "12px")
+        .style("font-weight", "normal")
+        .style("fill", function (d, i) { return "rgb(184, 18, 20)"; })
+        .append("textPath")
+        .attr("xlink:href", "#label-path")
+        .attr("startOffset", function (d, i) { return i * 100 / numBars + 5 / numBars + '%'; })
+        .text(function (d, i) { return "R" + (i + 1); });
+
     // BACKGROUND CIRCLES
     let circles = svg.append("g")
         .classed("circles__wrapper", true);
@@ -38,8 +64,12 @@ function initGraph(data) {
         .append("line")
         .classed("line__span", true)
         .style("stroke", "#dddddd")
-        .style("stroke-width", "10px")
-        .on("mouseover", function (d) { 
+        .style("stroke-width", "12px")
+        .on("mouseover", function (d, i) { 
+            
+            d3.select("label__" + i).style("font-weight", "bold");
+            console.log(d3.select(".label__" + i));
+            
             d3.select(this)
                 .transition()
                 .duration(200)
@@ -67,36 +97,13 @@ function initGraph(data) {
         .attr("height", innerCircleRadius)
         .attr("transform", "translate(" + (-innerCircleRadius / 2) + "," + (-innerCircleRadius / 2) + ")");
 
-    // LABELS
+    // AXIS
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0,-7)")
-        .call(xAxis);
-
-    // LABELS
-    /*let labelRadius = barHeight * 1.025;
-
-    let labels = svg.append("g")
-        .classed("labels", true);
-
-    labels.append("def")
-        .append("path")
-        .attr("id", "label-path")
-        .attr("d", "m0 " + -labelRadius + " a" + labelRadius + " " + labelRadius + " 0 1,1 -0.01 0");
-
-    labels.selectAll("text")
-        .data(values)
-        .enter().append("text")
-        .style("text-anchor", "middle")
-        .style("font-weight", "bold")
-        .style("fill", function (d, i) { return "#3e3e3e"; })
-        .append("textPath")
-        .attr("xlink:href", "#label-path")
-        .attr("startOffset", function (d, i) { return i * 100 / numBars + 50 / numBars + '%'; })
-        .text(function (d) { return d.toUpperCase(); });*/
+        .attr("transform", "translate(0,-7)");
 }
 
-function updateData(data) {
+function applyData(data) {
 
     d3.select("#control__variable").text(data.variable);
 
