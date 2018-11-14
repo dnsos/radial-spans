@@ -57,7 +57,9 @@ function initGraph(data) {
         .append("line")
         .classed("line__distance", true)
         .style("stroke", "#a3a3a3")
-        .style("stroke-width", "1px");
+        .style("stroke-width", "1px")
+        .attr("y1", -innerCircleRadius)
+        .attr("y2", barHeight);
 
     let lineSpan = linesWrapper
         .datum((d) => { return d })
